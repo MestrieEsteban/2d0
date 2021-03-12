@@ -15,35 +15,35 @@ dotenv.config()
  */
 
 passport.use(
-  new LocalStrategy(
-    {
-      usernameField: 'email',
-      passwordField: 'password',
-    },
-    async (email, password, next) => {
-      try {
-		  const user = await prisma.user.findUnique({
-			  where: {
-				  email
-			  }
-		  })
+	new LocalStrategy(
+		{
+			usernameField: 'email',
+			passwordField: 'password',
+		},
+		async (email, password, next) => {
+			try {
+				const user = await prisma.user.findUnique({
+					where: {
+						email
+					}
+				})
 
-        if (!user) {
-          next(`Sorry email ${email} dosen't exist`, null)
-          return
-        }
+				if (!user) {
+					next(`Sorry email ${email} dosen't exist`, null)
+					return
+				}
 
-        if (!checkPassword(password, user.encryptedPassword)) {
-          next(`Sorry password is incorrect`, null)
-          return
-        }
+				if (!checkPassword(password, user.encryptedPassword)) {
+					next(`Sorry password is incorrect`, null)
+					return
+				}
 
-        next(null, user)
-      } catch (err) {
-        next(err.message)
-      }
-    }
-  )
+				next(null, user)
+			} catch (err) {
+				next(err.message)
+			}
+		}
+	)
 )
 
 /**
@@ -51,34 +51,34 @@ passport.use(
  */
 
 passport.use(
-  new JwtStrategy(
-    {
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.JWT_ENCRYPTION as string,
-    },
-    async (jwtPayload, next) => {
-      try {
-        const { id } = jwtPayload
+	new JwtStrategy(
+		{
+			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+			secretOrKey: process.env.JWT_ENCRYPTION as string,
+		},
+		async (jwtPayload, next) => {
+			try {
+				const { id } = jwtPayload
 
-		  const user = await prisma.user.findUnique({
-			  where: {
-				  id
-			  }
-		  })
+				const user = await prisma.user.findUnique({
+					where: {
+						id
+					}
+				})
 
-        if (!user) {
-          next(`User ${id} doesn't exist`)
-          return
-        }
+				if (!user) {
+					next(`User ${id} doesn't exist`)
+					return
+				}
 
-        next(null, user)
-      } catch (err) {
-        console.log(err)
+				next(null, user)
+			} catch (err) {
+				console.log(err)
 
-        next(err.message)
-      }
-    }
-  )
+				next(err.message)
+			}
+		}
+	)
 )
 
 function checkPassword(uncryptedPassword: string, encryptedPassword: string): boolean {

@@ -19,11 +19,11 @@ model user {
     updatedAt         DateTime @updatedAt
 }
 
-model Task {
+model task {
     id         Int      @id @default(autoincrement())
     content    String   @db.VarChar
     isComplete Boolean  @default(false)
-    userId     Int
+    userId     String?	@db.VarChar
     createdAt  DateTime @default(now()) @db.Timestamp(6)
     updatedAt  DateTime @updatedAt
 }
