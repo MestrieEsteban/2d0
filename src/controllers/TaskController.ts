@@ -34,16 +34,16 @@ class TaskController {
 
 	}
 	static async updateTask(req: Request, res: Response) {
-		const { idTask } = req.params
+		const { taskId } = req.params
 		const { content, isComplete } = req.body
 
 		const task = await prisma.task.update({
 			where: {
-				id: parseInt(idTask),
+				id: parseInt(taskId),
 			},
 			data: {
 				content,
-				isComplete
+				isComplete: isComplete == 'true' ? true : false
 			}
 		})
 		try {
@@ -54,14 +54,14 @@ class TaskController {
 
 	}
 	static async deleteTask(req: Request, res: Response) {
-		const { idTask } = req.params
+		const { taskId } = req.params
 		const task = await prisma.task.delete({
 			where: {
-				id: parseInt(idTask),
+				id: parseInt(taskId),
 			}
 		})
 		try {
-			res.status(CREATED.status).json('ok')
+			res.status(CREATED.status).json({task})
 		} catch (err) {
 			return res.send(err)
 		}
