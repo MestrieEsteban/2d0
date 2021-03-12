@@ -3,7 +3,7 @@ import { Strategy as LocalStrategy } from 'passport-local'
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt'
 import dotenv from 'dotenv'
 
-import User from '@/core/models/User'
+import User from '@/core/models/LastUser'
 
 dotenv.config()
 

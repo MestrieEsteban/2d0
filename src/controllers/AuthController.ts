@@ -3,7 +3,7 @@ import { isEmpty } from 'lodash'
 import { success } from '../core/helpers/response'
 import { CREATED, OK } from '../core/constants/api'
 import jwt from 'jsonwebtoken'
-import User from '@/core/models/User'
+import User from '@/core/models/LastUser'
 import passport from 'passport'
 
 class AuthController {

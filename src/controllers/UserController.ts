@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { CREATED } from '../core/constants/api'
-import User from '../core/models/User'
+import User from '../core/models/LastUser'
 
 class UserController {
   static async getUser(req: Request, res: Response) {
