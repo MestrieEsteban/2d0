@@ -35,28 +35,7 @@ export default class Database {
 
 		const prisma = new PrismaClient()
 
-		async function main() {
-			const user = await prisma.user.create({
-				data: {
-					email: 'test@test.com',
-					encryptedPassword: 'test',
-					firstname: 'Esteban',
-					lastname: 'Mestrie',
-					birthdate: '30/11/1999',
-					gender: 'homme',
-				}
-			})
-			console.log(user);
-			
-		}
-
-		main()
-			.catch(e => {
-				throw e
-			})
-			.finally(async () => {
-				await prisma.$disconnect()
-			})
+		
 
 	}
 }

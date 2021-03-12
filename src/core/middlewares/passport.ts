@@ -2,8 +2,11 @@ import passport from 'passport'
 import { Strategy as LocalStrategy } from 'passport-local'
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt'
 import dotenv from 'dotenv'
+import bcrypt from 'bcryptjs'
+import { PrismaClient } from '@prisma/client'
 
-import User from '@/core/models/LastUser'
+const prisma = new PrismaClient()
+
 
 dotenv.config()
 
@@ -19,14 +22,18 @@ passport.use(
     },
     async (email, password, next) => {
       try {
-        const user = await User.findOne({ email })
+		  const user = await prisma.user.findUnique({
+			  where: {
+				  email
+			  }
+		  })
 
         if (!user) {
           next(`Sorry email ${email} dosen't exist`, null)
           return
         }
 
-        if (!user.checkPassword(password)) {
+        if (!checkPassword(password, user.encryptedPassword)) {
           next(`Sorry password is incorrect`, null)
           return
         }
@@ -53,7 +60,11 @@ passport.use(
       try {
         const { id } = jwtPayload
 
-        const user = await User.findOne({ where: { id } })
+		  const user = await prisma.user.findUnique({
+			  where: {
+				  id
+			  }
+		  })
 
         if (!user) {
           next(`User ${id} doesn't exist`)
@@ -69,3 +80,7 @@ passport.use(
     }
   )
 )
+
+function checkPassword(uncryptedPassword: string, encryptedPassword: string): boolean {
+	return bcrypt.compareSync(uncryptedPassword, encryptedPassword)
+}
